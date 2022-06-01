@@ -1,6 +1,7 @@
-from typing import Dict, Any, List, Optional
+# from typing import Dict, Any, List, Optional
 
-from lightning import LightningFlow, LightningWork
+# from lightning import LightningFlow, LightningWork
+from lightning import LightningFlow
 
 
 # GridSearch, RandomSearchStrategy, OptunaSearch
@@ -22,17 +23,13 @@ class FlashHPO(LightningFlow):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.generated_runs: Optional[List[Dict[str, Any]]] = None
         self.hpo_dict = {}
         self.num_runs = 0
         self.results = []
 
     # Having strategy as a class allows the users to define their own strategy class
-    def run(self, hpo_dict: dict, num_runs: int=1, strategy_cls=None, work_cls: LightningWork=None, *args, **kwargs):
-        if self.generated_runs is not None:
-            # clean-up
-            self.generated_runs = None
-
+    # def run(self, hpo_dict: dict, num_runs: int=1, strategy_cls=None, work_cls: LightningWork=None, *args, **kwargs):
+    def run(self, hpo_dict: dict, num_runs: int=1, strategy_cls=None, work=None, *args, **kwargs):
         self.hpo_dict = hpo_dict
         self.num_runs = num_runs
 
@@ -46,9 +43,7 @@ class FlashHPO(LightningFlow):
         strategy = strategy_cls()
         strategy.run(num_runs=num_runs, hpo_config_dict=hpo_dict)
 
-        # Now pass the generated_runs to the given work_cls
-        assert strategy.runs is not None, "The strategy class did not generate any runs! Probably something went wrong..."
+        # Now pass the runs to the given work_cls
+        assert len(strategy.runs) > 0, "The strategy class did not generate any runs! Probably something went wrong..."
         self.results.append(strategy.runs)
-        work_cls().run(strategy.runs, *args, **kwargs)
-        # hpo_dict = strategy_cls.preprocess(hpo_dict)
-        # self.generated_runs = strategy_cls.generate_runs(num_runs, hpo_dict)
+        work.run(self.results, *args, **kwargs)

@@ -9,7 +9,7 @@ from flash_hpo import SearchStrategy
 class RandomSearchStrategy(SearchStrategy):
     def run(self, num_runs: int, hpo_config_dict: Dict[str, Any], *args, **kwargs):
         preprocessed_dict = RandomSearchStrategy.preprocess(hpo_config_dict)
-        RandomSearchStrategy.generate_runs(num_runs, preprocessed_dict)
+        self.runs.append(RandomSearchStrategy.generate_runs(num_runs, preprocessed_dict))
 
     @staticmethod
     def preprocess(hpo_dict):
