@@ -4,7 +4,7 @@ from ray import tune
 from lightning import LightningFlow
 
 
-class FlashHPO(LightningFlow):
+class FlashHPO(LightningWork):
     """
     The HPO Component is used to suggest a list of configurations (hyper-parameters) to run with some config
     from the user for any task.
@@ -12,8 +12,8 @@ class FlashHPO(LightningFlow):
     This component doesn't come with a default UI. Please consider adding a UI yourself based on your task and needs.
     """
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, run_once=True, *args, **kwargs):
+        super().__init__(*args, run_once=run_once, **kwargs)
 
         self.generated_runs: Optional[List[Dict[str, Any]]] = None
         self.hpo_dict = {}
