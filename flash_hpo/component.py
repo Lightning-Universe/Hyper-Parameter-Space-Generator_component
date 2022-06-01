@@ -1,7 +1,7 @@
 from typing import Dict, Any, List, Optional
 from ray import tune
 
-from lightning import LightningFlow
+from lightning import LightningWork
 
 
 class FlashHPO(LightningWork):
