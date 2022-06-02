@@ -52,13 +52,14 @@ class HPOComponent(LightningFlow):
 
     def run(self):
         hpo_config = {
-            "backbone": "prajjwal1/bert-tiny",
+            "backbone": ["prajjwal1/bert-tiny", "pra1/bert-medium"],
             "learning_rate": [0.000001, 0.1],
         }
+
         # work_cls allows you to use the hyper-paramaters from the given num_runs
         # basically .run() method is called with the HPOs from the HPO component after this
         # self.hpo.run(hpo_dict=hpo_config, num_runs=2, work_cls=DoSomethingExtra, strategy_cls=RandomSearchStrategy)
-        self.hpo.run(hpo_dict=hpo_config, num_runs=10,
+        self.hpo.run(hpo_dict=hpo_config, num_runs=6,
                      work=self.work, strategy=RandomSearchStrategy())
 
         if self.work.has_succeeded:
