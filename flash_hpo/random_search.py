@@ -7,12 +7,14 @@ from flash_hpo import SearchStrategy
 
 
 class RandomSearchStrategy(SearchStrategy):
-    def run(self, num_runs: int, hpo_config_dict: Dict[str, Any], *args, **kwargs):
-        preprocessed_dict = RandomSearchStrategy.preprocess(hpo_config_dict)
-        self.runs.append(RandomSearchStrategy.generate_runs(num_runs, preprocessed_dict))
+    def run(self, run_id: int, hpo_config_dict: Dict[str, Any], *args, **kwargs):
+        # To ensure that we don't preprocessing again, we need to pass the pre-processed dict in the run method maybe?
+        # Currently for each run in the given num_runs, pre-processing will happen each time!
+        # Maybe do this in __init__()?
+        preprocessed_dict = self.preprocess(hpo_config_dict)
+        self.runs.extend(self.generate_runs(run_id, preprocessed_dict))
 
-    @staticmethod
-    def preprocess(hpo_dict):
+    def preprocess(self, hpo_dict):
         # Pre-process incoming hpo_dict into a dict with values which can be supported by _generate_runs
         # This currently assumes you are using a Random Strategy, feel free to override it with something else
         
@@ -31,17 +33,15 @@ class RandomSearchStrategy(SearchStrategy):
                 preprocessed_hpo_dict[key] = tune.uniform(val[0], val[1])
         return preprocessed_hpo_dict
 
-    @staticmethod
-    def generate_runs(num_runs: int, hpo_dict: Dict[str, Any]):
+    def generate_runs(self, run_id: int, hpo_dict: Dict[str, Any]):
         runs = []
-        for run_id in range(num_runs):
-            model_config = {}
-            for key, domain in hpo_dict.items():
-                if hasattr(domain, "sample"):
-                    model_config[key] = domain.sample()
-                else:
-                    model_config[key] = domain
-            runs.append(
-                {"id": run_id, "model_config": model_config}
-            )
+        model_config = {}
+        for key, domain in hpo_dict.items():
+            if hasattr(domain, "sample"):
+                model_config[key] = domain.sample()
+            else:
+                model_config[key] = domain
+        runs.append(
+            {"id": run_id, "model_config": model_config}
+        )
         return runs
