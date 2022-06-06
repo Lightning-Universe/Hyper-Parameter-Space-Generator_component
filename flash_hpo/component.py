@@ -22,7 +22,8 @@ class FlashHPO(LightningFlow):
             self.hpo_dict = hpo_dict
             self.num_runs = num_runs
 
-            # Thought: maybe we should receive an object, and not the class...? Let them instantiate it with the args they want to store?
+            # Thought: maybe we should receive an object, and not the class...?
+            # Let them instantiate it with the args they want to store?
             # Yep^^ done! :)
             for run_id in range(num_runs):
                 strategy.run(run_id=run_id, hpo_config_dict=hpo_dict, *args, **kwargs)

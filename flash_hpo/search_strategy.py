@@ -11,7 +11,7 @@ class SearchStrategy(LightningWork):
         # self.num_runs = None
         self.runs = []
 
-    def run(self, num_runs: int, hpo_config_dict: Dict[str, Any], *args, **kwargs):
+    def run(self, num_runs: int, hpo_config_dict: Dict[str, Any], preprocess=True, *args, **kwargs):
         # self.num_runs = num_runs
         # self.hpo_config_dict = None
         # preprocessed_dict = SearchStrategy.preprocess(hpo_config_dict, *args, **kwargs)

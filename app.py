@@ -73,13 +73,14 @@ class HPOComponent(LightningFlow):
             train_loader, test_loader = get_data_loaders()
             model = ConvNet()
             optimizer = optim.SGD(model.parameters(), lr=config["learning_rate"])
-            for i in range(10):
+            for _ in range(10):
                 train(model, optimizer, train_loader)
                 acc = test(model, test_loader)
                 tune.report(mean_accuracy=acc)
 
         self.hpo.run(hpo_dict=hpo_config, num_runs=5,
-                     strategy=GridSearchStrategy(), work=self.work, estimator=train_func)
+                     strategy=GridSearchStrategy(), work=self.work, estimator=train_func,
+                     mode="max", metric="mean_accuracy")
 
         if self.work.has_succeeded:
             self.visualize.run(self.hpo.results)
