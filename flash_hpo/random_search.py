@@ -17,7 +17,7 @@ class RandomSearchStrategy(SearchStrategy):
     def preprocess(self, hpo_dict):
         # Pre-process incoming hpo_dict into a dict with values which can be supported by _generate_runs
         # This currently assumes you are using a Random Strategy, feel free to override it with something else
-        
+
         preprocessed_hpo_dict = {}
         for key, val in hpo_dict.items():
             if key == "backbone":
