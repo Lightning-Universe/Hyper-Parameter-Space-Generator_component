@@ -5,7 +5,7 @@ from ray import tune
 
 
 class GridSearchStrategy(SearchStrategy):
-    def run(self, hpo_config_dict: Dict[str, Any], metric: str, mode: str, preprocess=True, run_id=-1, num_runs=-1, **kwargs):
+    def run(self, hpo_config_dict: Dict[str, Any], metric: str, mode: str, run_id=-1, num_runs=-1, **kwargs):
         try:
             estimator = kwargs["estimator"]
         except KeyError:
@@ -17,7 +17,7 @@ class GridSearchStrategy(SearchStrategy):
         if (num_runs == -1 and run_id == -1):
             raise ValueError("Either provide run_id or num_runs")
 
-        if preprocess:
+        if self.should_preprocess:
             hpo_config_dict = self.preprocess(hpo_config_dict)
 
         # estimator will be the function you need to run for each job
