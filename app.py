@@ -80,7 +80,7 @@ class HPOComponent(LightningFlow):
 
         self.hpo.run(hpo_dict=hpo_config, num_runs=5,
                      strategy=GridSearchStrategy(), work=self.work, estimator=train_func,
-                     mode="max", metric="mean_accuracy")
+                     mode="max", metric="mean_accuracy", parallelize=False)
 
         if self.work.has_succeeded:
             self.visualize.run(self.hpo.results)
