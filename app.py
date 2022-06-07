@@ -44,24 +44,6 @@ class Visualizer(LightningFlow):
         return StreamlitFrontend(render_fn=_render_fn)
 
 
-def train_func(config):
-    """
-    A sample training function to be used for GridSearchStrategy
-    """
-    from ray import tune
-    import torch.optim as optim
-
-    from ray.tune.examples.mnist_pytorch import get_data_loaders, ConvNet, train, test
-
-    train_loader, test_loader = get_data_loaders()
-    model = ConvNet()
-    optimizer = optim.SGD(model.parameters(), lr=config["learning_rate"])
-    for _ in range(10):
-        train(model, optimizer, train_loader)
-        acc = test(model, test_loader)
-        tune.report(mean_accuracy=acc)
-
-
 class HPOComponent(LightningFlow): 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -72,7 +54,6 @@ class HPOComponent(LightningFlow):
         self.results = None
 
     def run(self):
-        # Currently, base functions of each strategy only support backbone and learning_rate
         # If you want, you can write your own preprocess functions, and pass should_preprocess=False
         # in the class instantiation.
 

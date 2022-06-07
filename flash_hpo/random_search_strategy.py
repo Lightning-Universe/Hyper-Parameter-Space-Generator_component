@@ -32,6 +32,8 @@ class RandomSearchStrategy(SearchStrategy):
                 if not isinstance(val, list) or len(val) != 2:
                     raise ValueError(f"Expected a list of two numbers (float/int) but got {val}")
                 preprocessed_hpo_dict[key] = tune.uniform(val[0], val[1])
+            else:
+                preprocessed_hpo_dict[key] = val
         return preprocessed_hpo_dict
 
     def generate_runs(self, run_id: int, hpo_dict: Dict[str, Any]):
