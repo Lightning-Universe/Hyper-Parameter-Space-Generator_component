@@ -11,7 +11,7 @@ class RandomSearchStrategy(SearchStrategy):
         # To ensure that we don't preprocessing again, we need to pass the pre-processed dict in the run method maybe?
         # Currently for each run in the given num_runs, pre-processing will happen each time!
         # Maybe do this in __init__()?
-        if self.should_preprocss:
+        if self.should_preprocess:
             hpo_config_dict = self.preprocess(hpo_config_dict)
         self.runs.extend(self.generate_runs(run_id, hpo_config_dict))
 
