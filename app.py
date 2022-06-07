@@ -13,7 +13,7 @@ class DoSomethingExtra(LightningWork):
         super().__init__(run_once=True)
         self.hpo_list = []
 
-    def run(self, hpo_list: List[Any], *wargs, **kwargs):
+    def run(self, hpo_list: List[Any]):
         self.hpo_list.extend(hpo_list)
         with open("work_output.txt", "a") as _file:
             _file.write(str(len(self.hpo_list)))
@@ -29,7 +29,7 @@ def _render_fn(state: AppState):
         st.write("We are working on receiving the data... hold on!")
         return
 
-    st.write(pd.DataFrame(state.data))
+    st.table(pd.DataFrame(state.data))
 
 
 class Visualizer(LightningFlow):
@@ -73,14 +73,8 @@ class HPOComponent(LightningFlow):
 
     def run(self):
         # Currently, base functions of each strategy only support backbone and learning_rate
-        # If you want, you can write your own preprocess functions, or just pass a preprocessed dict
-        # as shown below in the comments, and pass should_preprocess=False in the class instantiation.
-        # hpo_config = {
-        #     "backbone": ["pral1/bert-tiny", "pra1/bert-medium"],
-        #     "learning_rate": [0.01, 1.0],
-        #     "n_epochs": 10,
-        #     "batch_size": [1, 10],
-        # }
+        # If you want, you can write your own preprocess functions, and pass should_preprocess=False
+        # in the class instantiation.
 
         hpo_config = {
             "backbone": ["prajjwal1/bert-tiny", "pra1/bert-medium"],
@@ -89,15 +83,12 @@ class HPOComponent(LightningFlow):
 
         # work_cls allows you to use the hyper-paramaters from the given num_runs
         # basically .run() method is called with the HPOs from the HPO component after this
+
         # self.hpo.run(hpo_dict=hpo_config, num_runs=5,
         #              work=self.work_random_search, strategy=RandomSearchStrategy(should_preprocess=True))
 
-        # Make sure that the estimator function reports the given metric using: (example)
-        # tune.report(mean_accuracy=acc)
         self.hpo.run(hpo_dict=hpo_config, num_runs=5,
-                     strategy=GridSearchStrategy(should_preprocess=True), work=self.work_grid_search,
-                     estimator=train_func, mode="max", metric="mean_accuracy",
-                     parallelize=False)
+                     strategy=GridSearchStrategy(should_preprocess=False), work=self.work_grid_search)
 
         if self.work_grid_search.has_succeeded:
             self.visualize.run(self.hpo.results)

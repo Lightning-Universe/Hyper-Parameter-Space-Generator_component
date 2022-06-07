@@ -1,61 +1,35 @@
 from typing import Dict, Any
 
 from flash_hpo import SearchStrategy
-from ray import tune
+
+from sklearn.model_selection import ParameterGrid
 
 
 class GridSearchStrategy(SearchStrategy):
-    def run(self, hpo_config_dict: Dict[str, Any], metric: str, mode: str, run_id=-1, num_runs=-1, **kwargs):
-        try:
-            estimator = kwargs["estimator"]
-        except KeyError:
-            raise KeyError("estimator is required for GridSearchStrategy")
+    def __init__(self, should_preprocess=False, *args, **kwargs):
+        super().__init__(should_preprocess=should_preprocess, *args, **kwargs)
 
-        if mode not in ['min', 'max']:
-            raise ValueError("Expected mode to be either 'min' or 'max'")
-
-        if (num_runs == -1 and run_id == -1):
-            raise ValueError("Either provide run_id or num_runs")
-
+    def run(self, hpo_config_dict: Dict[str, Any], run_id=-1):
         if self.should_preprocess:
             hpo_config_dict = self.preprocess(hpo_config_dict)
 
-        # estimator will be the function you need to run for each job
-        # if run_id is given (other than the default -1), means parallelize is handled by the Flow (FlashHPO)
-        if run_id != -1:
-            analysis = tune.run(estimator, config=hpo_config_dict, num_samples=1)
-        else:
-            # num_runs is provided instead, so use that as num_samples
-            analysis = tune.run(estimator, config=hpo_config_dict, num_samples=num_runs)
-            # To ensure the output comes with run id: 0
-            run_id = 0
-        self.runs.extend(self.generate_runs(run_id, analysis, metric, mode))
+        self.runs.extend(self.generate_runs(run_id, hpo_config_dict))
 
     def preprocess(self, hpo_dict):
-        preprocessed_hpo_dict = {}
-        for key, val in hpo_dict.items():
-            if key == "backbone":
-                if isinstance(val, str):
-                    preprocessed_hpo_dict[key] = val
-                elif isinstance(val, list):
-                    preprocessed_hpo_dict[key] = tune.grid_search(val)
-                else:
-                    raise ValueError("Only list/str allowed to be passed as backbone")
-            elif key == "learning_rate":
-                if isinstance(val, (int, float)):
-                    preprocessed_hpo_dict[key] = val
-                    continue
-                if not isinstance(val, list):
-                    raise ValueError("Expected a list of numbers (int/float)")
-                preprocessed_hpo_dict[key] = tune.grid_search(val)
-            else:
-               raise ValueError("Either define the preprocess function for the config type, or pass preprocess=false to the run method")
-        return preprocessed_hpo_dict
+        """
+        We don't need to perform any preprocessing here, assuming correct configuration is passed.
 
-    def generate_runs(self, run_id: int, analysis_obj, metric: str, mode: str):
+        For what is supported, consult: https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.ParameterGrid.html
+        """
+        return hpo_dict
+
+    def generate_runs(self, run_id: int, model_config: dict):
         runs = []
-        model_config = analysis_obj.get_best_config(metric=metric, mode=mode)
+        config_dict = {"id": run_id}
+        param_grid = list(ParameterGrid(model_config))
+        for ind, val in enumerate(param_grid):
+            config_dict[f"Space Index: {ind}"] = val
         runs.append(
-            {"id": run_id, "model_config": model_config}
+            config_dict
         )
         return runs
