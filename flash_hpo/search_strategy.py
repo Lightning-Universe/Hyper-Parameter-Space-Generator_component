@@ -10,7 +10,7 @@ class SearchStrategy(LightningWork):
         self.should_preprocess = should_preprocess
         self.runs = []
 
-    def run(self, hpo_config_dict: Dict[str, Any], preprocess=True, num_runs=1, *args, **kwargs):
+    def run(self, hpo_config_dict: Dict[str, Any], num_runs=1, *args, **kwargs):
         raise NotImplementedError("You need to implement the run method")
 
     def preprocess(hpo_config_dict, *args, **kwargs):
