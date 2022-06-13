@@ -11,13 +11,14 @@ class RandomSearchStrategy(SearchStrategy):
         # To ensure that we don't preprocessing again, we need to pass the pre-processed dict in the run method maybe?
         # Currently for each run in the given num_runs, pre-processing will happen each time!
         # Maybe do this in __init__()?
-        preprocessed_dict = self.preprocess(hpo_config_dict)
-        self.runs.extend(self.generate_runs(run_id, preprocessed_dict))
+        if self.should_preprocess:
+            hpo_config_dict = self.preprocess(hpo_config_dict)
+        self.runs.extend(self.generate_runs(run_id, hpo_config_dict))
 
     def preprocess(self, hpo_dict):
         # Pre-process incoming hpo_dict into a dict with values which can be supported by _generate_runs
         # This currently assumes you are using a Random Strategy, feel free to override it with something else
-        
+
         preprocessed_hpo_dict = {}
         for key, val in hpo_dict.items():
             if key == "backbone":
@@ -31,6 +32,8 @@ class RandomSearchStrategy(SearchStrategy):
                 if not isinstance(val, list) or len(val) != 2:
                     raise ValueError(f"Expected a list of two numbers (float/int) but got {val}")
                 preprocessed_hpo_dict[key] = tune.uniform(val[0], val[1])
+            else:
+                preprocessed_hpo_dict[key] = val
         return preprocessed_hpo_dict
 
     def generate_runs(self, run_id: int, hpo_dict: Dict[str, Any]):
