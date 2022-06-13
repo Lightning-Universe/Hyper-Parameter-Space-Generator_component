@@ -9,11 +9,11 @@ class GridSearchStrategy(SearchStrategy):
     def __init__(self, should_preprocess=False, *args, **kwargs):
         super().__init__(should_preprocess=should_preprocess, *args, **kwargs)
 
-    def run(self, hpe_config_dict: Dict[str, Any], run_id=-1):
+    def run(self, hp_config_dict: Dict[str, Any], run_id=-1):
         if self.should_preprocess:
-            hpe_config_dict = self.preprocess(hpe_config_dict)
+            hp_config_dict = self.preprocess(hp_config_dict)
 
-        self.runs.extend(self.generate_runs(run_id, hpe_config_dict))
+        self.runs.extend(self.generate_runs(run_id, hp_config_dict))
 
     def preprocess(self, hpe_dict):
         """
