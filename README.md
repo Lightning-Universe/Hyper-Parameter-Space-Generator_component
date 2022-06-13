@@ -1,7 +1,7 @@
 <div align="center">
 <img src="https://pl-bolts-doc-images.s3.us-east-2.amazonaws.com/lai.png" width="200px">
 
-A lightning component to run HPO on given config.
+A lightning component to run a Hyper-Parameter engine on a given config for RandomSearch and GridSearch strategies.
 
 ______________________________________________________________________
 
@@ -12,8 +12,8 @@ ______________________________________________________________________
 Use these instructions to install:
 
 ```bash
-git clone https://github.com/PyTorchLightning/LAI-HPO.git
-cd LAI-HPO
+git clone https://github.com/PyTorchLightning/lightning-hp-engine.git
+cd lightning-hp-engine
 pip install -r requirements.txt
 pip install -e .
 ```
@@ -40,16 +40,19 @@ from lightning.frontend import StreamlitFrontend
 from lightning.utilities.state import AppState
 
 
-from flash_hpo import FlashHPO, RandomSearchStrategy
+from lightning_hp_engine import LightningHPEngine
+from lightning_hp_engine import RandomSearchStrategy, GridSearchStrategy
 
 
 class DoSomethingExtra(LightningWork):
     def __init__(self):
         super().__init__(run_once=True)
-        self.hpo_list = []
+        self.hpe_list = []
 
-    def run(self, hpo_list: List[Any]):
-        self.hpo_list.extend(hpo_list)
+    def run(self, hpe_list: List[Any]):
+        self.hpe_list.extend(hpe_list)
+        with open("work_output.txt", "a") as _file:
+            _file.write(str(len(self.hpe_list)))
 
 
 def _render_fn(state: AppState):
@@ -62,7 +65,7 @@ def _render_fn(state: AppState):
         st.write("We are working on receiving the data... hold on!")
         return
 
-    st.write(pd.DataFrame(state.data))
+    st.table(pd.DataFrame(state.data))
 
 
 class Visualizer(LightningFlow):
@@ -77,33 +80,40 @@ class Visualizer(LightningFlow):
         return StreamlitFrontend(render_fn=_render_fn)
 
 
-class HPOComponent(LightningFlow):
+class HPEComponent(LightningFlow):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.hpo = FlashHPO()
-        self.work = DoSomethingExtra()
+        self.hpe = LightningHPEngine()
+        self.work_random_search = DoSomethingExtra()
+        self.work_grid_search = DoSomethingExtra()
         self.visualize = Visualizer()
         self.results = None
 
     def run(self):
-        hpo_config = {
+        # If you want, you can write your own preprocess functions, and pass should_preprocess=False
+        # in the class instantiation.
+
+        hpe_config = {
             "backbone": ["prajjwal1/bert-tiny", "pra1/bert-medium"],
             "learning_rate": [0.000001, 0.1],
         }
 
         # work_cls allows you to use the hyper-paramaters from the given num_runs
-        # basically .run() method is called with the HPOs from the HPO component after this
-        # self.hpo.run(hpo_dict=hpo_config, num_runs=2, work_cls=DoSomethingExtra, strategy_cls=RandomSearchStrategy)
-        self.hpo.run(hpo_dict=hpo_config, num_runs=6,
-                     work=self.work, strategy=RandomSearchStrategy())
+        # basically .run() method is called with the hpes from the HP Engine component after this
 
-        if self.work.has_succeeded:
-            self.visualize.run(self.hpo.results)
+        self.hpe.run(hpe_dict=hpe_config, num_runs=5,
+                     work=self.work_random_search, strategy=RandomSearchStrategy(should_preprocess=True))
+
+        # self.hpe.run(hpe_dict=hpe_config, num_runs=5,
+        #              strategy=GridSearchStrategy(should_preprocess=False), work=self.work_grid_search)
+
+        if self.work_random_search.has_succeeded:
+            self.visualize.run(self.hpe.results)
 
     def configure_layout(self):
-        return {"name": "HPO Output", "content": self.visualize}
+        return {"name": "hpe Output", "content": self.visualize}
 
 
-# To launch the HPO Component
-app = LightningApp(HPOComponent(), debug=True)
+# To launch the hpe Component
+app = LightningApp(HPEComponent(), debug=True)
 ```
