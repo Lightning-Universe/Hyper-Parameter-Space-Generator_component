@@ -27,7 +27,7 @@ setup(
     description="Run Hyper Parameter Engine around the given choices of hyper-parameters with Grid Search and Random Search strategies",
     author="Kushashwa Ravi Shrimali, Ethan Harris",
     author_email="kush@grid.ai",
-    url="https://github.com/PyTorchLightning/lightning-hp-engine",
+    url="https://github.com/PyTorchLightning/LAI-hyper-parameter-engine",
     packages=find_packages(exclude=["tests", "tests.*"]),
     install_requires=setup_tools._load_requirements(_PATH_ROOT),
 )
