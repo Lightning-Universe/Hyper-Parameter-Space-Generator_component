@@ -9,8 +9,6 @@ ______________________________________________________________________
 
 ## Install
 
-**NOTE**: Please do not review yet unless and until you are one of the main authors of Auto ML App. This component is in _Heavy WIP_ stage. :)
-
 Use these instructions to install:
 
 ```bash
