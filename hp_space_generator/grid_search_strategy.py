@@ -1,6 +1,6 @@
 from typing import Dict, Any
 
-from lightning_hp_engine import SearchStrategy
+from hp_space_generator import SearchStrategy
 
 from sklearn.model_selection import ParameterGrid
 
