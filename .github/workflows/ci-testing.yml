@@ -72,7 +72,7 @@ jobs:
 
     - name: Tests
       run: |
-        coverage run --source lightning_hp_engine -m py.test lightning_hp_engine tests -v --junitxml=junit/test-results-${{ runner.os }}-${{ matrix.python-version }}.xml
+        coverage run --source hp_space_generator -m py.test hp_space_generator tests -v --junitxml=junit/test-results-${{ runner.os }}-${{ matrix.python-version }}.xml
 
     - name: Statistics
       if: success()

@@ -1,7 +1,7 @@
 <div align="center">
 <img src="https://pl-bolts-doc-images.s3.us-east-2.amazonaws.com/lai.png" width="200px">
 
-A lightning component to run a Hyper-Parameter engine on a given config for RandomSearch and GridSearch strategies.
+A lightning component to generate Hyper Parameter Space on a given config for Random Search and Grid Search strategies.
 
 ______________________________________________________________________
 
@@ -12,8 +12,8 @@ ______________________________________________________________________
 Use these instructions to install:
 
 ```bash
-git clone https://github.com/PyTorchLightning/lightning-hp-engine.git
-cd lightning-hp-engine
+git clone https://github.com/PyTorchLightning/LAI-Hyper-Parameter-Space-Generator.git
+cd LAI-Hyper-Parameter-Space-Generator
 pip install -r requirements.txt
 pip install -e .
 ```
@@ -40,8 +40,8 @@ from lightning.frontend import StreamlitFrontend
 from lightning.utilities.state import AppState
 
 
-from lightning_hp_engine import LightningHPEngine
-from lightning_hp_engine import RandomSearchStrategy, GridSearchStrategy
+from hp_space_generator import HPSpaceGenerator
+from hp_space_generator import RandomSearchStrategy, GridSearchStrategy
 
 
 class DoSomethingExtra(LightningWork):
@@ -80,10 +80,10 @@ class Visualizer(LightningFlow):
         return StreamlitFrontend(render_fn=_render_fn)
 
 
-class HPEComponent(LightningFlow):
+class HPComponent(LightningFlow):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.hpe = LightningHPEngine()
+        self.space_generator = HPSpaceGenerator()
         self.work_random_search = DoSomethingExtra()
         self.work_grid_search = DoSomethingExtra()
         self.visualize = Visualizer()
@@ -93,27 +93,26 @@ class HPEComponent(LightningFlow):
         # If you want, you can write your own preprocess functions, and pass should_preprocess=False
         # in the class instantiation.
 
-        hpe_config = {
+        hp_config = {
             "backbone": ["prajjwal1/bert-tiny", "pra1/bert-medium"],
             "learning_rate": [0.000001, 0.1],
         }
 
         # work_cls allows you to use the hyper-paramaters from the given num_runs
-        # basically .run() method is called with the hpes from the HP Engine component after this
 
-        self.hpe.run(hpe_dict=hpe_config, num_runs=5,
+        self.space_generator.run(hp_dict=hp_config, num_runs=5,
                      work=self.work_random_search, strategy=RandomSearchStrategy(should_preprocess=True))
 
-        # self.hpe.run(hpe_dict=hpe_config, num_runs=5,
+        # self.space_generator.run(hp_dict=hp_config, num_runs=5,
         #              strategy=GridSearchStrategy(should_preprocess=False), work=self.work_grid_search)
 
         if self.work_random_search.has_succeeded:
-            self.visualize.run(self.hpe.results)
+            self.visualize.run(self.space_generator.results)
 
     def configure_layout(self):
-        return {"name": "hpe Output", "content": self.visualize}
+        return {"name": "generated Hyper Parameter Space", "content": self.visualize}
 
 
 # To launch the hpe Component
-app = LightningApp(HPEComponent(), debug=True)
+app = LightningApp(HPComponent(), debug=True)
 ```
