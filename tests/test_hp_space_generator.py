@@ -1,8 +1,9 @@
 from hp_space_generator import HPSpaceGenerator, RandomSearchStrategy, GridSearchStrategy
 
-from lightning import LightningWork
+import lightning as L
 
-class DoSomethingExtra(LightningWork):
+
+class DoSomethingExtra(L.LightningWork):
     def __init__(self):
         super().__init__(run_once=True)
         self.hp_list = []
