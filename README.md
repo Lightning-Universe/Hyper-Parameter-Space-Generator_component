@@ -12,7 +12,7 @@ ______________________________________________________________________
 Use these instructions to install:
 
 ```bash
-git clone https://github.com/PyTorchLightning/LAI-Hyper-Parameter-Space-Generator.git
+git clone https://github.com/Lightning-AI/LAI-Hyper-Parameter-Space-Generator.git
 cd LAI-Hyper-Parameter-Space-Generator
 pip install -r requirements.txt
 pip install -e .
