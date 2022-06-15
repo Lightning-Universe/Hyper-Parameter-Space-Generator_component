@@ -35,16 +35,15 @@ Methods which can be overridden will be included later.
 ```python
 from typing import List, Any
 
-from lightning import LightningFlow, LightningApp, LightningWork
-from lightning.frontend import StreamlitFrontend
-from lightning.utilities.state import AppState
-
+import lightning as L
+from lightning.app.frontend import StreamlitFrontend
+from lightning.app.utilities.state import AppState
 
 from hp_space_generator import HPSpaceGenerator
 from hp_space_generator import RandomSearchStrategy, GridSearchStrategy
 
 
-class DoSomethingExtra(LightningWork):
+class DoSomethingExtra(L.LightningWork):
     def __init__(self):
         super().__init__(run_once=True)
         self.hpe_list = []
@@ -68,7 +67,7 @@ def _render_fn(state: AppState):
     st.table(pd.DataFrame(state.data))
 
 
-class Visualizer(LightningFlow):
+class Visualizer(L.LightningFlow):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.data = None
@@ -80,7 +79,7 @@ class Visualizer(LightningFlow):
         return StreamlitFrontend(render_fn=_render_fn)
 
 
-class HPComponent(LightningFlow):
+class HPComponent(L.LightningFlow):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.space_generator = HPSpaceGenerator()
@@ -114,5 +113,5 @@ class HPComponent(LightningFlow):
 
 
 # To launch the hpe Component
-app = LightningApp(HPComponent(), debug=True)
+app = L.LightningApp(HPComponent(), debug=True)
 ```
