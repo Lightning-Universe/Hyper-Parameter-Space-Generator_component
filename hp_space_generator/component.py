@@ -1,7 +1,7 @@
-from lightning import LightningFlow
+import lightning as L
 
 
-class HPSpaceGenerator(LightningFlow):
+class HPSpaceGenerator(L.LightningFlow):
     """
     The HP Engine Component is used to suggest a list of configurations (hyper-parameters) to run with some config
     from the user for any task.
