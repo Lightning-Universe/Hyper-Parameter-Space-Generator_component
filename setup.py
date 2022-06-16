@@ -27,7 +27,7 @@ setup(
     description="Generator Hyper Parameter space around the given choices of hyper-parameters with Grid Search and Random Search strategies",
     author="Kushashwa Ravi Shrimali, Ethan Harris",
     author_email="kush@lightning.ai",
-    url="https://github.com/Lightning-AI/LAI-Hyper-Parameter-Space-Generator",
+    url="https://github.com/Lightning-AI/LAI-Hyper-Parameter-Space-Generator-Component",
     packages=find_packages(exclude=["tests", "tests.*"]),
     install_requires=setup_tools._load_requirements(_PATH_ROOT),
 )

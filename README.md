@@ -12,8 +12,8 @@ ______________________________________________________________________
 Use these instructions to install:
 
 ```bash
-git clone https://github.com/Lightning-AI/LAI-Hyper-Parameter-Space-Generator.git
-cd LAI-Hyper-Parameter-Space-Generator
+git clone https://github.com/Lightning-AI/LAI-Hyper-Parameter-Space-Generator-Component.git
+cd LAI-Hyper-Parameter-Space-Generator-Component
 pip install -r requirements.txt
 pip install -e .
 ```
