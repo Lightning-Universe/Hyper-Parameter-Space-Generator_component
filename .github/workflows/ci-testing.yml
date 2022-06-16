@@ -49,7 +49,7 @@ jobs:
 
     - name: Install Lightning
       run: |
-        pip insstall lightning
+        pip install lightning
       shell: bash
 
     - name: Install dependencies
