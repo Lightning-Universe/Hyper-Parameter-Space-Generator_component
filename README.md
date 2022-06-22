@@ -53,6 +53,7 @@ To get started with using this component, copy the code below and paste it into 
 
 ```python
 from typing import List, Any
+import logging
 
 import lightning as L
 from lightning.app.frontend import StreamlitFrontend
