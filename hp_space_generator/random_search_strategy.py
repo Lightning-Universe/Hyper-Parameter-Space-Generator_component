@@ -1,5 +1,7 @@
 # Random Search Strategy using Ray Tune
+from numbers import Number
 from typing import Dict, Any
+import collections
 
 from ray import tune
 
@@ -16,24 +18,17 @@ class RandomSearchStrategy(SearchStrategy):
         self.runs.extend(self.generate_runs(run_id, hp_config_dict))
 
     def preprocess(self, hp_dict):
-        # Pre-process incoming hp_dict into a dict with values which can be supported by _generate_runs
-        # This currently assumes you are using a Random Strategy, feel free to override it with something else
-
+        # Pre-process incoming hp_dict into a dict with values which can be supported by `generate_runs`
+        # Feel free to override this function based on your convenience
         preprocessed_hp_dict = {}
         for key, val in hp_dict.items():
-            if key == "backbone":
-                if isinstance(val, str):
-                    preprocessed_hp_dict[key] = val
-                elif isinstance(val, list):
-                    preprocessed_hp_dict[key] = tune.choice(val) 
+            if isinstance(val, collections.Iterable):
+                if len(val) == 2 and isinstance(val[0], Number) and isinstance(val[1], Number):
+                    preprocessed_hp_dict[key] = tune.uniform(val[0], val[1])
                 else:
-                    raise TypeError(f"Expected either List or a string for backbone but got {type(val)}")
-            elif key == "learning_rate":
-                if not isinstance(val, list) or len(val) != 2:
-                    raise ValueError(f"Expected a list of two numbers (float/int) but got {val}")
-                preprocessed_hp_dict[key] = tune.uniform(val[0], val[1])
+                    preprocessed_hp_dict[key] = tune.choice(val)
             else:
-                preprocessed_hp_dict[key] = val
+                preprocessed_hp_dict[key] = tune.choice(val)
         return preprocessed_hp_dict
 
     def generate_runs(self, run_id: int, hp_dict: Dict[str, Any]):
