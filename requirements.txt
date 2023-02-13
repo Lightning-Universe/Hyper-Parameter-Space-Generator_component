@@ -1,4 +1,4 @@
 ray[tune]==1.12.1
-scikit-learn==1.1.1
+scikit-learn==1.2.1
 streamlit==1.9.0
 lightning>=1.9.0, <2.0.0
