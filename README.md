@@ -1,6 +1,10 @@
 <div align="center">
 <img src="https://pl-bolts-doc-images.s3.us-east-2.amazonaws.com/lai.png" width="200px">
 
+[![Lightning](https://img.shields.io/badge/-Lightning-792ee5?logo=pytorchlightning&logoColor=white)](https://lightning.ai)
+![license](https://img.shields.io/badge/License-Apache%202.0-blue.svg)
+[![CI testing](https://github.com/Lightning-Universe/Hyper-Parameter-Space-Generator_component/actions/workflows/ci-testing.yml/badge.svg?event=push)](https://github.com/Lightning-Universe/Hyper-Parameter-Space-Generator_component/actions/workflows/ci-testing.yml)
+
 A lightning component to generate Hyper Parameter Space on a given config for Random Search and Grid Search strategies.
 
 ______________________________________________________________________
