@@ -39,7 +39,7 @@ jobs:
 
     - name: Tests
       run: |
-        coverage run --source hp_space_generator -m py.test hp_space_generator tests -v
+        coverage run --source hp_space_generator -m pytest hp_space_generator tests -v
 
     - name: Statistics
       if: success()
