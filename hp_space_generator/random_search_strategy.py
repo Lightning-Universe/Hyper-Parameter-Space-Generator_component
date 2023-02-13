@@ -5,7 +5,7 @@ from typing import Any, Dict
 
 from ray import tune
 
-from hp_space_generator import SearchStrategy
+from hp_space_generator.search_strategy import SearchStrategy
 
 
 class RandomSearchStrategy(SearchStrategy):
