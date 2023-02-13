@@ -1,6 +1,6 @@
-from hp_space_generator import HPSpaceGenerator, RandomSearchStrategy, GridSearchStrategy
-
 import lightning as L
+
+from hp_space_generator import GridSearchStrategy, HPSpaceGenerator, RandomSearchStrategy
 
 
 class DoSomethingExtra(L.LightningWork):
@@ -23,6 +23,7 @@ def test_hp_space_generator_random():
     work_obj = DoSomethingExtra()
     space_generator.run(hp_config, num_runs=2, work=work_obj, strategy=RandomSearchStrategy())
     assert len(work_obj.hp_list) != 0, "Didn't generate results..."
+
 
 def test_hp_space_generator_grid():
     # Test the HP Space Generator Component for text classification
