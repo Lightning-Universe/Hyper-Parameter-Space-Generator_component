@@ -16,7 +16,7 @@ def _load_requirements(path_dir: str = _PATH_ROOT, file_name: str = "requirement
 setup(
     name="hp_space_generator",
     version="0.1.0",
-    description="Generator Hyper Parameter space around the given choices of hyper-parameters with Grid Search and Random Search strategies",
+    description="Generator Hyper Parameter space around the given choices of hyper-parameters with Grid Search and Random Search strategies",  # noqa: E501
     author="Kushashwa Ravi Shrimali, Ethan Harris",
     author_email="kush@lightning.ai",
     url="https://github.com/Lightning-AI/LAI-Hyper-Parameter-Space-Generator-Component",

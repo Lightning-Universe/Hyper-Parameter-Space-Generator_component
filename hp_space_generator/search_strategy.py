@@ -1,10 +1,10 @@
 from typing import Any, Dict
 
-import lightning as L
+from lightning import LightningWork
 
 
 # TODO: Maybe create a method which makes sure that the given format for the hpe Config Dictionary is correct
-class SearchStrategy(L.LightningWork):
+class SearchStrategy(LightningWork):
     def __init__(self, should_preprocess=True, *args, **kwargs):
         super().__init__(run_once=True, parallel=True, *args, **kwargs)
         self.should_preprocess = should_preprocess
