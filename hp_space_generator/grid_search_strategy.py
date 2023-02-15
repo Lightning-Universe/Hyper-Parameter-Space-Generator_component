@@ -1,8 +1,8 @@
-from typing import Dict, Any
-
-from hp_space_generator import SearchStrategy
+from typing import Any, Dict
 
 from sklearn.model_selection import ParameterGrid
+
+from hp_space_generator.search_strategy import SearchStrategy
 
 
 class GridSearchStrategy(SearchStrategy):
@@ -16,10 +16,10 @@ class GridSearchStrategy(SearchStrategy):
         self.runs.extend(self.generate_runs(run_id, hp_config_dict))
 
     def preprocess(self, hpe_dict):
-        """
-        We don't need to perform any preprocessing here, assuming correct configuration is passed.
+        """We don't need to perform any preprocessing here, assuming correct configuration is passed.
 
-        For what is supported, consult: https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.ParameterGrid.html
+        For what is supported, consult: https://scikit-
+        learn.org/stable/modules/generated/sklearn.model_selection.ParameterGrid.html
         """
         return hpe_dict
 
@@ -29,7 +29,5 @@ class GridSearchStrategy(SearchStrategy):
         param_grid = list(ParameterGrid(model_config))
         for ind, val in enumerate(param_grid):
             config_dict[f"Space Index: {ind}"] = val
-        runs.append(
-            config_dict
-        )
+        runs.append(config_dict)
         return runs

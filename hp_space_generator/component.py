@@ -2,8 +2,7 @@ import lightning as L
 
 
 class HPSpaceGenerator(L.LightningFlow):
-    """
-    The HP Engine Component is used to suggest a list of configurations (hyper-parameters) to run with some config
+    """The HP Engine Component is used to suggest a list of configurations (hyper-parameters) to run with some config
     from the user for any task.
 
     This component doesn't come with a default UI. Please consider adding a UI yourself based on your task and needs.
@@ -17,8 +16,7 @@ class HPSpaceGenerator(L.LightningFlow):
         self.results = None
 
     # Having strategy as a class allows the users to define their own strategy class
-    def run(self, hp_dict: dict, num_runs: int=1, strategy=None, work=None, work_kwargs={},
-            *args, **kwargs):
+    def run(self, hp_dict: dict, num_runs: int = 1, strategy=None, work=None, work_kwargs={}, *args, **kwargs):
         if self.results is None:
             self.hp_dict = hp_dict
             self.num_runs = num_runs
@@ -30,6 +28,8 @@ class HPSpaceGenerator(L.LightningFlow):
                 strategy.run(run_id=run_id, hp_config_dict=hp_dict, *args, **kwargs)
 
             # Now pass the runs to the given work_cls
-            assert len(strategy.runs) > 0, "The strategy class did not generate any runs! Probably something went wrong..."
+            assert (
+                len(strategy.runs) > 0
+            ), "The strategy class did not generate any runs! Probably something went wrong..."
             self.results = strategy.runs
             work.run(self.results, work_kwargs) if len(work_kwargs) != 0 else work.run(self.results)

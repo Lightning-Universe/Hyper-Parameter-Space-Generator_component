@@ -18,7 +18,6 @@ Use these instructions to install:
 ```bash
 git clone https://github.com/Lightning-AI/LAI-Hyper-Parameter-Space-Generator-Component.git
 cd LAI-Hyper-Parameter-Space-Generator-Component
-pip install -r requirements.txt
 pip install -e .
 ```
 
@@ -27,7 +26,7 @@ pip install -e .
 This component currently supports two strategies:
 
 1. Random Search Strategy (`RandomSearchStrategy`) - using Ray library
-2. Grid Search Strategy (`GridSearchStrategy`) - using Scikit-Learn library
+1. Grid Search Strategy (`GridSearchStrategy`) - using Scikit-Learn library
 
 The component has been designed to allow users command over how they want to preprocess data. You can choose not to preprocess as well.
 
@@ -118,8 +117,12 @@ class HPComponent(L.LightningFlow):
         }
 
         # The hyper-parameter space generated is passed to the work class
-        self.space_generator.run(hp_dict=hp_config, num_runs=5,
-                     work=self.work_random_search, strategy=RandomSearchStrategy(should_preprocess=True))
+        self.space_generator.run(
+            hp_dict=hp_config,
+            num_runs=5,
+            work=self.work_random_search,
+            strategy=RandomSearchStrategy(should_preprocess=True),
+        )
 
         # Uncomment the lines below if you want to use GridSearchStrategy
         # self.space_generator.run(hp_dict=hp_config, num_runs=5,
@@ -130,10 +133,7 @@ class HPComponent(L.LightningFlow):
             self.visualize.run(self.space_generator.results)
 
     def configure_layout(self):
-        return {
-            "name": "generated Hyper Parameter Space",
-            "content": self.visualize
-        }
+        return {"name": "generated Hyper Parameter Space", "content": self.visualize}
 
 
 # To launch the hpe Component

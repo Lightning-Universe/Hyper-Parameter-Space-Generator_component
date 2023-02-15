@@ -1,11 +1,11 @@
 # Random Search Strategy using Ray Tune
-from numbers import Number
-from typing import Dict, Any
 import collections
+from numbers import Number
+from typing import Any, Dict
 
 from ray import tune
 
-from hp_space_generator import SearchStrategy
+from hp_space_generator.search_strategy import SearchStrategy
 
 
 class RandomSearchStrategy(SearchStrategy):
@@ -22,7 +22,7 @@ class RandomSearchStrategy(SearchStrategy):
         # Feel free to override this function based on your convenience
         preprocessed_hp_dict = {}
         for key, val in hp_dict.items():
-            if isinstance(val, collections.Iterable):
+            if isinstance(val, collections.abc.Iterable):
                 if len(val) == 2 and isinstance(val[0], Number) and isinstance(val[1], Number):
                     preprocessed_hp_dict[key] = tune.uniform(val[0], val[1])
                 else:
@@ -39,7 +39,5 @@ class RandomSearchStrategy(SearchStrategy):
                 model_config[key] = domain.sample()
             else:
                 model_config[key] = domain
-        runs.append(
-            {"id": run_id, "model_config": model_config}
-        )
+        runs.append({"id": run_id, "model_config": model_config})
         return runs
