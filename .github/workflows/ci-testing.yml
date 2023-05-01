@@ -36,6 +36,8 @@ jobs:
       shell: bash
 
     - name: Tests
+      env:
+        PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION: python
       run: coverage run --source hp_space_generator -m pytest hp_space_generator tests -v
 
     - name: Statistics
