@@ -2,4 +2,4 @@ coverage
 codecov>=2.1
 pytest>=3.0.5
 pytest-cov
-protobuf<=4.23.3
+protobuf<=4.23.4
