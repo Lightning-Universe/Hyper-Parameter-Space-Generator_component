@@ -1,6 +1,6 @@
 from typing import Any, Dict
 
-from lightning import LightningWork
+from lightning.app import LightningWork
 
 
 # TODO: Maybe create a method which makes sure that the given format for the hpe Config Dictionary is correct

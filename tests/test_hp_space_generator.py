@@ -1,4 +1,4 @@
-from lightning import LightningWork
+from lightning.app import LightningWork
 
 from hp_space_generator import GridSearchStrategy, HPSpaceGenerator, RandomSearchStrategy
 
